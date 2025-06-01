@@ -351,7 +351,6 @@ export default {
 }
 
 .todo-title {
-  @include truncate;
   font-weight: $font-weight-medium;
   color: $text;
   transition: all $transition-fast;
