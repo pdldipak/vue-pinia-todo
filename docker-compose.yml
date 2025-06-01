@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '5173:5173'
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+    # Uncomment the next line if you want to install new deps from inside the container
+    # command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    environment:
+      - NODE_ENV=production
+    # No volume mount for prod, as it's static
+
+  cypress:
+    image: cypress/included:14.4.0
+    depends_on:
+      - dev
+    working_dir: /e2e
+    volumes:
+      - .:/e2e
+    environment:
+      - CYPRESS_baseUrl=http://dev:5173
+    command: ['cypress', 'run']
